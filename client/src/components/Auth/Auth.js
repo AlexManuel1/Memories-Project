@@ -1,6 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Avatar, Button, Paper, Grid, Typography, Container } from '@material-ui/core';
-import { GoogleLogin, GoogleOAuthProvider } from '@react-oauth/google';
+import { Avatar, Button, Paper, Grid, Typography, Container, OutlinedInput } from '@material-ui/core';
 import { useDispatch } from 'react-redux';
 import jwt_decode from 'jwt-decode';
 // 3:26:00
@@ -25,9 +24,10 @@ const Auth = () => {
         });
 
         google.accounts.id.renderButton(
-            document.getElementsByClassName(classes.googleButton)
-        )
-    })
+            document.getElementById("google-sign-in"),
+            { theme: "outline", size: "large", text: "Sign in with Google", width: "100px" }
+        );
+    }, [])
 
     const handleShowPassword = () => setShowPassword((prevShowPassword) => !prevShowPassword)
 
@@ -47,6 +47,7 @@ const Auth = () => {
     const googleSuccess = (res) => {
         console.log(res.credential);
         const userObject = jwt_decode(res.credential);
+        console.log(userObject);
         // const result = res?.profileObj;
         // const token = res?.tokenId;
 
@@ -88,7 +89,7 @@ const Auth = () => {
                     <Button type="submit" fullWidth variant="contained" color="primary" className={classes.submit}>
                         { isSignup ? "Sign Up" : "Sign In" }
                     </Button>
-                    <Button className={classes.googleButton} color="primary" fullWidth startIcon={<Icon />} variant="contained">Google Sign In</Button>
+                    <div id="google-sign-in" className={classes.googleButton}></div>
                     <Grid container justifyContent="flex-end">
                         <Grid item>
                             <Button onClick={switchMode}>
