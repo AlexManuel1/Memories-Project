@@ -1,8 +1,9 @@
 import React, { useState, useEffect } from 'react';
 import { Avatar, Button, Paper, Grid, Typography, Container, OutlinedInput } from '@material-ui/core';
 import { useDispatch } from 'react-redux';
+import { useHistory } from 'react-router-dom';
 import jwt_decode from 'jwt-decode';
-// 3:26:00
+import { authorize } from '../../redux/reducers/auth';
 
 import Icon from './icon';
 import LockOutlinedIcon from '@material-ui/icons/LockOutlined';
@@ -10,11 +11,15 @@ import useStyles from './styles';
 import Input from './Input';
 const CLIENT_ID = "209006956243-hnrvr7qtgbkrk9k54esgbs0f9nu72plm.apps.googleusercontent.com";
 
+const initialState = { firstName: '', lastName: '', email: '', password: '', confirmedPassword: '' };
+
 const Auth = () => {
     const classes = useStyles();
     const [showPassword, setShowPassword] = useState(false);
     const [isSignup, setIsSignup] = useState(false);
+    const [formData, setFormData] = useState(initialState);
     const dispatch = useDispatch();
+    const history = useHistory();
 
     useEffect(() => {
         /* global google */
@@ -31,12 +36,19 @@ const Auth = () => {
 
     const handleShowPassword = () => setShowPassword((prevShowPassword) => !prevShowPassword)
 
-    const handleSubmit = () => {
+    const handleSubmit = (e) => {
+        e.preventDefault();
 
+        console.log(formData);
+        if (isSignup) {
+            dispatch(signup(formData, history));
+        } else {
+            dispatch(signin(formData, history));
+        }
     };
 
-    const handleChange = () => {
-
+    const handleChange = (e) => {
+        setFormData({ ... formData, [e.target.name]: e.target.value });
     };
 
     const switchMode = () => {
@@ -45,17 +57,15 @@ const Auth = () => {
     }
 
     const googleSuccess = (res) => {
-        console.log(res.credential);
-        const userObject = jwt_decode(res.credential);
-        console.log(userObject);
-        // const result = res?.profileObj;
-        // const token = res?.tokenId;
+        const token = res?.credential;
+        const result = jwt_decode(res?.credential);
 
-        // try {
-
-        // } catch (error) {
-        //     console.log(error)
-        // }
+        try {
+            dispatch(authorize({ result, token })) // { type: 'AUTH', payload: { result, token } }
+            history.push('/');
+        } catch (error) {
+            console.log(error)
+        }
     };
 
     const googleFailure = async (error) => {
@@ -75,8 +85,8 @@ const Auth = () => {
                         { isSignup &&
                             (
                                 <>
-                                    <Input name="First Name" label="First Name" handleChange={handleChange} autoFocus half />
-                                    <Input name="First Name" label="First Name" handleChange={handleChange} half />
+                                    <Input name="firstName" label="First Name" handleChange={handleChange} autoFocus half />
+                                    <Input name="lastName" label="First Name" handleChange={handleChange} half />
                                 </>
                             )
                         }
