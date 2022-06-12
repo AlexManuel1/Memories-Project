@@ -10,18 +10,15 @@ import memories from '../../images/memories.png';
 const Navbar = () => {
     const classes = useStyles();
     const [user, setUser] = useState(JSON.parse(localStorage.getItem('profile')));
-    console.log("user: ", user);
     const dispatch = useDispatch();
     const history = useHistory();
     const location = useLocation();
 
     const logoutUser = () => {
         dispatch(logout());
-
         history.push('/');
-
         setUser(null);
-    }
+    };
 
     useEffect(() => {
         //const token = user?.token;
@@ -29,8 +26,9 @@ const Navbar = () => {
         // JWT ...
 
         setUser(JSON.parse(localStorage.getItem('profile')));
+        console.log("local storage: ",JSON.parse(localStorage.getItem('profile')));
         console.log("user: ", user);
-    }, [location])
+    }, [location]);
 
     return (
         <AppBar className={classes.appBar} position="static" color="inherit">

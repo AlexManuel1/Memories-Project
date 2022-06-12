@@ -17,6 +17,7 @@ export const getPosts = createAsyncThunk('posts/getPosts', async () => {
 
 export const createPost = createAsyncThunk('posts/createPost', async (post) => {
     try {
+        console.log("create post thunk: ", post);
         const { data } = await api.createPostApi(post);
         return data;
     } catch (error) {
@@ -78,6 +79,7 @@ export const postsSlice = createSlice({
             .addCase(createPost.fulfilled, (state, action) => {
                 state.posts = [...state.posts, action.payload];
                 state.status = 'idle';
+                console.log(state.posts);
             })
             .addCase(createPost.rejected, (state, action) => {
                 state.status = 'failed';

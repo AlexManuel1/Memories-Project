@@ -9,8 +9,10 @@ export const signin = createAsyncThunk("auth/signin", async ({ formData, history
     try {
         // log in user
         const { data } = await api.signIn(formData);
-
-        history.push('/');
+        if (Object.keys(data).length !== 0) {
+            localStorage.setItem('profile', JSON.stringify(data));
+            history.push('/');
+        }
         return data;
     } catch (error) {
         console.log(error);
@@ -19,11 +21,12 @@ export const signin = createAsyncThunk("auth/signin", async ({ formData, history
 
 export const signup = createAsyncThunk("auth/signup", async ({ formData, history }) => {
     try {
-        console.log(formData);
         // sign up in user
         const { data } = await api.signUp(formData);
-
-        history.push('/');
+        if (Object.keys(data).length !== 0) {
+            localStorage.setItem('profile', JSON.stringify(data));
+            history.push('/');
+        }
         return data;
     } catch (error) {
         console.log(error);
@@ -53,11 +56,7 @@ export const authSlice = createSlice({
                 console.log("pending");
             })
             .addCase(signin.fulfilled, (state, action) => {
-                const loginData = action.payload;
-                if (Object.keys(loginData).length !== 0) {
-                    localStorage.setItem('profile', JSON.stringify({ ...loginData}));
-                }
-                return { ...state, authData: loginData };
+                return { ...state, authData: action.payload };
             })
             .addCase(signin.rejected, (state, action) => {
                 console.log("rejected");
@@ -66,11 +65,7 @@ export const authSlice = createSlice({
                 console.log("pending");
             })
             .addCase(signup.fulfilled, (state, action) => {
-                const loginData = action.payload;
-                if (Object.keys(loginData).length !== 0) {
-                    localStorage.setItem('profile', JSON.stringify({ ...loginData}));
-                }
-                return { ...state, authData: loginData };
+                return { ...state, authData: action.payload };
             })
             .addCase(signup.rejected, (state, action) => {
                 console.log("rejected");
