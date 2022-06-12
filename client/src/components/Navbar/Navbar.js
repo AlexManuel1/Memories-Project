@@ -10,6 +10,7 @@ import memories from '../../images/memories.png';
 const Navbar = () => {
     const classes = useStyles();
     const [user, setUser] = useState(JSON.parse(localStorage.getItem('profile')));
+    console.log("user: ", user);
     const dispatch = useDispatch();
     const history = useHistory();
     const location = useLocation();
@@ -23,11 +24,12 @@ const Navbar = () => {
     }
 
     useEffect(() => {
-        const token = user?.token;
+        //const token = user?.token;
 
         // JWT ...
 
         setUser(JSON.parse(localStorage.getItem('profile')));
+        console.log("user: ", user);
     }, [location])
 
     return (
@@ -37,7 +39,7 @@ const Navbar = () => {
                 <img className={classes.image} src={memories} alt="memories" height="60" />
             </div>
             <Toolbar className={classes.toolbar}>
-                {user ? 
+                {user?.result ? 
                 (
                     <div className={classes.profile}>
                         <Avatar className={classes.purple} alt={user.result.name} src={user.result.imageUrl}>{user.result.name.charAt(0)}</Avatar>

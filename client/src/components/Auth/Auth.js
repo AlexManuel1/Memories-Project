@@ -3,7 +3,7 @@ import { Avatar, Button, Paper, Grid, Typography, Container, OutlinedInput } fro
 import { useDispatch } from 'react-redux';
 import { useHistory } from 'react-router-dom';
 import jwt_decode from 'jwt-decode';
-import { authorize } from '../../redux/reducers/auth';
+import { authorize, signin, signup } from '../../redux/reducers/auth';
 
 import Icon from './icon';
 import LockOutlinedIcon from '@material-ui/icons/LockOutlined';
@@ -41,9 +41,9 @@ const Auth = () => {
 
         console.log(formData);
         if (isSignup) {
-            dispatch(signup(formData, history));
+            dispatch(signup({ formData, history }));
         } else {
-            dispatch(signin(formData, history));
+            dispatch(signin({ formData, history }));
         }
     };
 
@@ -53,7 +53,7 @@ const Auth = () => {
 
     const switchMode = () => {
         setIsSignup(!isSignup);
-        handleShowPassword(false);
+        setShowPassword(false);
     }
 
     const googleSuccess = (res) => {
@@ -86,14 +86,14 @@ const Auth = () => {
                             (
                                 <>
                                     <Input name="firstName" label="First Name" handleChange={handleChange} autoFocus half />
-                                    <Input name="lastName" label="First Name" handleChange={handleChange} half />
+                                    <Input name="lastName" label="Last Name" handleChange={handleChange} half />
                                 </>
                             )
                         }
                         <Input name="email" label="Email Address" handleChange={handleChange} type="email"/> 
                         <Input name="password" label="Password" handleChange={handleChange} type={showPassword ? "text" : "password"} handleShowPassword={handleShowPassword}/> 
                         {
-                            isSignup && <Input name="confirmPassword" label="Repeat Password" handleChange={handleChange} type="password"/>
+                            isSignup && <Input name="confirmedPassword" label="Repeat Password" handleChange={handleChange} type="password"/>
                         }
                     </Grid>
                     <Button type="submit" fullWidth variant="contained" color="primary" className={classes.submit}>
