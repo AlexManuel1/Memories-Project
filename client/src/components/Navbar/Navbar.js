@@ -3,6 +3,7 @@ import { Link, useHistory, useLocation } from 'react-router-dom';
 import { AppBar, Avatar, Button, Toolbar, Typography } from '@material-ui/core';
 import { useDispatch } from 'react-redux';
 import { logout } from '../../redux/reducers/auth';
+import decode from 'jwt-decode';
 
 import useStyles from './styles';
 import memories from '../../images/memories.png';
@@ -21,9 +22,17 @@ const Navbar = () => {
     };
 
     useEffect(() => {
-        //const token = user?.token;
+        const token = user?.token;
 
         // JWT ...
+
+        if (token) {
+            const decodedToken = decode(token);
+
+            if (decodedToken.exp * 1000 < new Date().getTime()) {
+                logoutUser();
+            } 
+        }
 
         setUser(JSON.parse(localStorage.getItem('profile')));
         console.log("local storage: ",JSON.parse(localStorage.getItem('profile')));

@@ -20,6 +20,7 @@ const auth = async (req, res, next) => {
             console.log("Google decodedData: ", decodedData);
 
             req.userId = decodedData?.sub;
+            console.log("req.userId: ",req.userId);
         }
 
         next();

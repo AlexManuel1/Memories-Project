@@ -9,6 +9,7 @@ const initialState = {
 export const getPosts = createAsyncThunk('posts/getPosts', async () => {
     try {
         const { data } = await api.fetchPosts();
+        console.log("getPosts data: ", data);
         return data;
     } catch (error) {
         console.log(error);
@@ -17,8 +18,8 @@ export const getPosts = createAsyncThunk('posts/getPosts', async () => {
 
 export const createPost = createAsyncThunk('posts/createPost', async (post) => {
     try {
-        console.log("create post thunk: ", post);
         const { data } = await api.createPostApi(post);
+        console.log("createPost data: ", data);
         return data;
     } catch (error) {
         console.log(error);
