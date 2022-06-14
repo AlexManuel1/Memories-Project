@@ -16,6 +16,16 @@ export const getPosts = createAsyncThunk('posts/getPosts', async () => {
     }
 });
 
+export const getPostsBySearch = createAsyncThunk('posts/getPostsBySearch', async (searchQuery) => {
+    try {
+        const { data: { data } } = await api.fetchPostsBySearch(searchQuery); 
+        console.log("getPostsBySearch data: ", data);
+        return data;
+    } catch (error) {
+        console.log(error);
+    }
+});
+
 export const createPost = createAsyncThunk('posts/createPost', async (post) => {
     try {
         const { data } = await api.createPostApi(post);
@@ -109,11 +119,20 @@ export const postsSlice = createSlice({
                 state.status = 'loading';
             })
             .addCase(likePost.fulfilled, (state, action) => {
-                console.log("likePost fulfilled, payload: ", action.payload);
                 state.posts = state.posts.map((post) => post._id === action.payload._id ? action.payload : post);
                 state.status = 'idle';
             })
             .addCase(likePost.rejected, (state, action) => {
+                state.status = 'failed';
+            })
+            .addCase(getPostsBySearch.pending, (state, action) => {
+                state.status = 'loading';
+            })
+            .addCase(getPostsBySearch.fulfilled, (state, action) => {
+                state.posts = action.payload;
+                state.status = 'idle';
+            })
+            .addCase(getPostsBySearch.rejected, (state, action) => {
                 state.status = 'failed';
             })
     }

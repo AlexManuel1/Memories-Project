@@ -24,5 +24,5 @@ mongoose.connect(process.env.CONNECTION_URL, { useNewUrlParser: true, useUnified
     .catch((error) => console.log(error.message));
 
 // https://www.mongodb.com/cloud/atlas
-// 4:52:00
+// 5:45:00
 // fix redux connectability in index.js
