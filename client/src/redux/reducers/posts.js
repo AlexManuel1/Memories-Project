@@ -76,7 +76,7 @@ export const likePost = createAsyncThunk('posts/likePost', async (id) => {
 export const commentPost = createAsyncThunk('posts/commentPost', async ({ value, id }) => {
     try {
         const { data } = await api.comment(value, id);
-        console.log(data); // { comments: ['comment'] }
+        console.log("comment post thunk: ", data); // { comments: ['comment'] }
         return data;
     } catch (error) {
         console.log(error);
@@ -98,7 +98,6 @@ export const postsSlice = createSlice({
                 state.isLoading = true;
             })
             .addCase(getPost.fulfilled, (state, action) => {
-                console.log("getPost action.payload: ", action.payload);
                 state.isLoading = false;
                 state.post = action.payload;
             })
@@ -106,7 +105,6 @@ export const postsSlice = createSlice({
                 state.isLoading = true;
             })
             .addCase(getPosts.fulfilled, (state, action) => {
-                console.log("action.payload: ", action.payload);
                 const { data, currentPage, numberOfPages } = action.payload.data;
                 state.posts = data;
                 state.currentPage = currentPage;
@@ -155,6 +153,7 @@ export const postsSlice = createSlice({
             .addCase(commentPost.fulfilled, (state, action) => {
                 const posts = state.posts.map((post) => post._id === action.payload._id ? action.payload : post);
                 state.posts = posts;
+                state.post = action.payload;
                 state.isLoading = false;
             })
     }

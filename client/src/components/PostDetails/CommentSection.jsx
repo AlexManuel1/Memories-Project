@@ -6,17 +6,23 @@ import useStyles from './styles';
 import { commentPost } from '../../redux/reducers/posts';
 
 const CommentSection = ({ post }) => {
+    console.log("post: ", post);
     const classes = useStyles();
     const [comments, setComments] = useState(post?.comments);
     const [comment, setComment] = useState("");
     const user = JSON.parse(localStorage.getItem('profile'));
     const dispatch = useDispatch();
+    const commentsRef = useRef();
 
     const handleClick = async () => {
         const finalComment = `${user.result.name}: ${comment}`;
-        const newComments = await dispatch(commentPost({ value: finalComment, id: post._id }));
-        setComments(newComments?.payload?.comments);
+        const newCommentsObject = await dispatch(commentPost({ value: finalComment, id: post._id }));
+        const newComments = newCommentsObject?.payload?.comments;
+
+        setComments(newComments);
         setComment('');
+
+        commentsRef.current.scrollIntoView({ behavior: "smooth" });
     };
 
     return (
@@ -29,6 +35,7 @@ const CommentSection = ({ post }) => {
                             {c}
                         </Typography>
                     ))}
+                    <div ref={commentsRef} />
                 </div>
                 {user?.result?.name && (
                     <div style={{ width: '70%' }}>
